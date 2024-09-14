@@ -1,17 +1,18 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
+import app from './app';
+import { AppDataSource } from './db/connection';
 
-const app = express();
+async function main() {
+    try {
+        await AppDataSource.initialize();
+        console.log("Database connected.")
+        app.listen(3000, () => {
+            console.log("Server active");
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+    }
+}
 
-app.use(morgan('dev'));
-app.use(cors());
-
-app.get('/', (req, res) => {
-    console.log('Hola mundo');
-    res.send("Hola mundo");
-});
-
-app.listen(3000, () => {
-    console.log("Server active");
-});
+main();
